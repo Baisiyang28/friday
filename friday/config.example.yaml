@@ -1,0 +1,34 @@
+# Friday 配置
+# 复制此文件为 config.yaml 并填入你的配置
+
+llm:
+  # 主力 API 后端
+  primary: api
+  # 备用本地后端（API 不可用时自动切换）
+  fallback: local
+
+  api:
+    # 支持的 provider: deepseek, claude
+    provider: deepseek
+    deepseek:
+      api_key: ""  # 你的 DeepSeek API Key
+      model: deepseek-chat
+      base_url: https://api.deepseek.com
+    claude:
+      api_key: ""  # 你的 Claude API Key（可选）
+      model: claude-sonnet-4-20250514
+
+  local:
+    # Ollama 配置
+    base_url: http://localhost:11434
+    model: qwen2.5:7b
+
+memory:
+  # 最大对话轮次（超出则丢弃最早的消息）
+  max_turns: 50
+  # 数据库路径
+  db_path: data/conversations.db
+
+feishu:
+  app_id: ""
+  app_secret: ""

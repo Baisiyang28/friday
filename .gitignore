@@ -1,0 +1,23 @@
+# 个人信息——绝不提交
+config.yaml
+
+# 运行时数据
+data/
+*.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 用户内容
+knowledge/
+workflows/
+
+# IDE / Claude
+.claude/
+
+# 虚拟环境
+venv/
+.venv/
+env/
