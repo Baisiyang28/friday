@@ -9,6 +9,7 @@ from core.llm.api_backend import APIBackend
 from core.llm.local_backend import LocalBackend
 from core.tools.base import Tool
 from memory.store import MessageStore
+from memory.user_profile import UserProfile
 
 logger = logging.getLogger("yokino")
 
@@ -35,6 +36,12 @@ class Agent:
         self.store = MessageStore()
         self.backends: list[LLMBackend] = [APIBackend(), LocalBackend()]
         self.tools: dict[str, Tool] = {}
+
+        # 加载用户长期记忆
+        self._user_profile = UserProfile()
+        user_facts = self._user_profile.to_prompt()
+        if user_facts:
+            self.SYSTEM_PROMPT = self.SYSTEM_PROMPT + "\n\n====\n" + user_facts + "\n===="
 
         # Session ID（暂时用固定值，后续支持多会话）
         self.session_id = "default"

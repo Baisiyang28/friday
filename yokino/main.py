@@ -28,6 +28,7 @@ from core.tools.weather import WeatherTool
 from core.tools.knowledge_base import SearchKnowledgeTool, AddKnowledgeTool, ListKnowledgeTool
 from core.tools.script_runner import RunPythonTool, RunShellTool
 from core.tools.workflow import WorkflowTool, ListWorkflowsTool
+from core.tools.user_memory import RememberUserTool, ListUserFactsTool
 
 console = Console()
 
@@ -50,6 +51,8 @@ def register_tools(agent: Agent):
     agent.register_tool(RunShellTool())
     agent.register_tool(WorkflowTool())
     agent.register_tool(ListWorkflowsTool())
+    agent.register_tool(RememberUserTool())
+    agent.register_tool(ListUserFactsTool())
 
 
 def print_banner():
