@@ -24,7 +24,7 @@ from core.tools.weather import WeatherTool
 from core.tools.knowledge_base import SearchKnowledgeTool, AddKnowledgeTool, ListKnowledgeTool
 from core.tools.script_runner import RunPythonTool, RunShellTool
 from core.tools.workflow import WorkflowTool, ListWorkflowsTool
-from core.tools.user_memory import RememberUserTool, ListUserFactsTool
+from core.tools.user_memory import RememberUserTool, ForgetUserTool, ListUserFactsTool
 
 
 def main():
@@ -54,6 +54,7 @@ def main():
     agent.register_tool(WorkflowTool())
     agent.register_tool(ListWorkflowsTool())
     agent.register_tool(RememberUserTool())
+    agent.register_tool(ForgetUserTool())
     agent.register_tool(ListUserFactsTool())
 
     # 初始化飞书 Bot

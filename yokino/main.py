@@ -28,9 +28,87 @@ from core.tools.weather import WeatherTool
 from core.tools.knowledge_base import SearchKnowledgeTool, AddKnowledgeTool, ListKnowledgeTool
 from core.tools.script_runner import RunPythonTool, RunShellTool
 from core.tools.workflow import WorkflowTool, ListWorkflowsTool
-from core.tools.user_memory import RememberUserTool, ListUserFactsTool
+from core.tools.user_memory import RememberUserTool, ForgetUserTool, ListUserFactsTool
 
 console = Console()
+
+
+def check_connectivity(cfg) -> bool:
+    """启动自检：ping API 和 Ollama，返回是否有任一端可用"""
+    import requests
+
+    console.print()
+    console.print("[bold]🔍 启动自检...[/bold]")
+
+    all_ok = True
+
+    # 1. 检查 API 后端
+    provider = cfg.llm.api.provider
+    if provider == "deepseek":
+        key = cfg.llm.api.deepseek.api_key
+        base = cfg.llm.api.deepseek.base_url
+        model = cfg.llm.api.deepseek.model
+        try:
+            resp = requests.get(
+                f"{base}/models",
+                headers={"Authorization": f"Bearer {key}"},
+                timeout=10,
+            )
+            if resp.status_code == 200:
+                console.print(f"  ✅ DeepSeek API ([green]{base}[/green]) — 模型: {model}")
+            else:
+                console.print(f"  ⚠️  DeepSeek API 返回 HTTP {resp.status_code}: {resp.text[:100]}")
+                all_ok = False
+        except requests.ConnectionError:
+            console.print(f"  ❌ DeepSeek API ([red]无法连接[/red]) — 请检查网络/代理")
+            all_ok = False
+        except requests.Timeout:
+            console.print(f"  ❌ DeepSeek API ([red]连接超时[/red])")
+            all_ok = False
+        except Exception as e:
+            console.print(f"  ❌ DeepSeek API ([red]{e}[/red])")
+            all_ok = False
+
+    elif provider == "claude":
+        key = cfg.llm.api.claude.api_key
+        model = cfg.llm.api.claude.model
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=key)
+            # 发一个极短的请求验证连通性
+            resp = client.messages.create(
+                model=model,
+                max_tokens=1,
+                messages=[{"role": "user", "content": "hi"}],
+            )
+            console.print(f"  ✅ Claude API ([green]Anthropic[/green]) — 模型: {model}")
+        except Exception as e:
+            console.print(f"  ❌ Claude API ([red]{e}[/red])")
+            all_ok = False
+
+    # 2. 检查 Ollama 本地后端
+    local_base = cfg.llm.local.base_url
+    local_model = cfg.llm.local.model
+    try:
+        resp = requests.get(f"{local_base}/api/tags", timeout=5)
+        if resp.status_code == 200:
+            models = [m["name"] for m in resp.json().get("models", [])]
+            if any(local_model.split(":")[0] in m for m in models):
+                console.print(f"  ✅ Ollama ([green]{local_base}[/green]) — 模型: {local_model} 已就绪")
+            else:
+                console.print(f"  ⚠️  Ollama 已运行，但未找到模型 [yellow]{local_model}[/yellow]。可用模型: {models or '(无)'}")
+                console.print(f"     运行 [dim]ollama pull {local_model}[/dim] 拉取模型")
+                all_ok = False
+        else:
+            console.print(f"  ⚠️  Ollama 返回 HTTP {resp.status_code}")
+            all_ok = False
+    except requests.ConnectionError:
+        console.print(f"  ⚠️  Ollama ([yellow]未运行[/yellow]) — API 不可用时将无法降级")
+    except Exception as e:
+        console.print(f"  ⚠️  Ollama ([yellow]{e}[/yellow])")
+
+    console.print()
+    return all_ok
 
 
 def register_tools(agent: Agent):
@@ -52,6 +130,7 @@ def register_tools(agent: Agent):
     agent.register_tool(WorkflowTool())
     agent.register_tool(ListWorkflowsTool())
     agent.register_tool(RememberUserTool())
+    agent.register_tool(ForgetUserTool())
     agent.register_tool(ListUserFactsTool())
 
 
@@ -92,14 +171,12 @@ def main(config: str):
         )
         return
 
+    # 启动自检：ping API 和 Ollama
+    check_connectivity(cfg)
+
     # 初始化 Agent 并注册工具
     agent = Agent()
     register_tools(agent)
-
-    api_type = cfg.llm.api.provider
-    local_model = cfg.llm.local.model
-    console.print(f"🤖 API 后端: [green]{api_type}[/green]  |  本地备用: [yellow]{local_model}[/yellow]")
-    console.print()
 
     print_banner()
 

@@ -22,6 +22,24 @@ class RememberUserTool(Tool):
         }
 
 
+class ForgetUserTool(Tool):
+    name = "forget_user"
+    description = "删除一条已记住的用户信息（按序号）"
+
+    def execute(self, index: int) -> str:
+        profile = UserProfile()
+        return profile.remove_fact(index)
+
+    def parameters(self) -> dict:
+        return {
+            "type": "object",
+            "properties": {
+                "index": {"type": "integer", "description": "要删除的信息序号，从 list_user_facts 的结果中获取"},
+            },
+            "required": ["index"],
+        }
+
+
 class ListUserFactsTool(Tool):
     name = "list_user_facts"
     description = "列出所有已记住的关于用户的信息"
