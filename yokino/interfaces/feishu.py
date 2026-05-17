@@ -36,7 +36,7 @@ class FeishuBot:
     def _run(self):
         """主运行循环"""
         try:
-            from lark_oapi.event.ws.ws_client import WebSocketClient
+            from lark_oapi.ws import Client
         except ImportError:
             logger.error("请安装 lark-oapi: pip install lark-oapi")
             return
@@ -47,7 +47,7 @@ class FeishuBot:
             self._handle_event(event)
 
         # WebSocket 客户端会自动重连
-        ws_client = WebSocketClient(
+        ws_client = Client(
             app_id=self.app_id,
             app_secret=self.app_secret,
             event_handler=on_event,
@@ -92,23 +92,25 @@ class FeishuBot:
         """发送消息到飞书聊天"""
         try:
             from lark_oapi.api.im.v1 import CreateMessageRequest, CreateMessageRequestBody
-            from lark_oapi import Config, Context, DOMAIN_FEISHU
+            from lark_oapi.client import ClientBuilder
+            from lark_oapi import FEISHU_DOMAIN
 
-            conf = Config(
-                domain=DOMAIN_FEISHU,
-                app_id=self.app_id,
-                app_secret=self.app_secret,
-            )
-            client = Context(conf)
+            client = (ClientBuilder()
+                .app_id(self.app_id)
+                .app_secret(self.app_secret)
+                .domain(FEISHU_DOMAIN)
+                .build())
 
-            body = CreateMessageRequestBody()
-            body.receive_id = chat_id
-            body.msg_type = "text"
-            body.content = json.dumps({"text": content})
+            body = (CreateMessageRequestBody.builder()
+                .receive_id(chat_id)
+                .msg_type("text")
+                .content(json.dumps({"text": content}))
+                .build())
 
-            request = CreateMessageRequest()
-            request.receive_id_type = "chat_id"
-            request.request_body = body
+            request = (CreateMessageRequest.builder()
+                .receive_id_type("chat_id")
+                .request_body(body)
+                .build())
 
             client.im.v1.message.create(request)
         except Exception:
