@@ -60,6 +60,11 @@ def load_config(path: str = "config.yaml") -> Config:
     global _config
 
     config_path = Path(path)
+    if not config_path.exists() and not config_path.is_absolute():
+        # 如果 CWD 下找不到，尝试在 friday 包目录下查找
+        fallback = Path(__file__).parent / path
+        if fallback.exists():
+            config_path = fallback
     if not config_path.exists():
         _config = Config()
         return _config
