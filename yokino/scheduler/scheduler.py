@@ -10,13 +10,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
-logger = logging.getLogger("friday.scheduler")
+logger = logging.getLogger("yokino.scheduler")
 
 REMINDERS_FILE = Path("data/reminders.json")
 
 
-class FridayScheduler:
-    """Friday 任务调度器"""
+class YokinoScheduler:
+    """Yokino 任务调度器"""
 
     def __init__(self, send_callback: Callable | None = None):
         """

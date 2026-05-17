@@ -5,7 +5,7 @@ import logging
 import threading
 from typing import Callable
 
-logger = logging.getLogger("friday.feishu")
+logger = logging.getLogger("yokino.feishu")
 
 
 class FeishuBot:

@@ -1,6 +1,6 @@
-# Friday — 个人 AI 助理
+# Yokino — 个人 AI 助理
 
-就像钢铁侠的「星期五」，一个贴心的个人 AI 生活学习工作助理。
+你的个人 AI 生活学习工作助理。
 
 ## 特性
 
@@ -83,7 +83,7 @@ python run_bot.py
 ## 项目结构
 
 ```
-friday/
+yokino/
 ├── main.py                  # CLI 入口
 ├── run_bot.py               # 飞书 Bot 入口
 ├── run_web.py               # Web UI 入口

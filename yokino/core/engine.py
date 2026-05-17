@@ -1,4 +1,4 @@
-"""Friday Agent 主循环引擎"""
+"""Yokino Agent 主循环引擎"""
 
 import logging
 from typing import Any, Iterator
@@ -10,14 +10,14 @@ from core.llm.local_backend import LocalBackend
 from core.tools.base import Tool
 from memory.store import MessageStore
 
-logger = logging.getLogger("friday")
+logger = logging.getLogger("yokino")
 
 
 class Agent:
     """Agent 主循环"""
 
-    # System prompt 定义 Friday 的身份和能力
-    SYSTEM_PROMPT = """你是 Friday，一个贴心的个人 AI 生活学习工作助理。
+    # System prompt 定义 Yokino 的身份和能力
+    SYSTEM_PROMPT = """你是 Yokino，一个贴心的个人 AI 生活学习工作助理。
 你像伙伴一样和用户对话，语气自然亲切，但保持专业。
 
 能力说明：

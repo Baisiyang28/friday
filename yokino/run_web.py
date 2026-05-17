@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Friday Web UI — 基于 Streamlit 的网页界面"""
+"""Yokino Web UI — 基于 Streamlit 的网页界面"""
 
 import io
 import sys
@@ -22,7 +22,7 @@ from core.tools.script_runner import RunPythonTool, RunShellTool
 from core.tools.workflow import WorkflowTool, ListWorkflowsTool
 
 st.set_page_config(
-    page_title="Friday — AI 助理",
+    page_title="Yokino — AI 助理",
     page_icon="🤖",
     layout="wide",
 )
@@ -57,7 +57,7 @@ def main():
 
     # Sidebar
     with st.sidebar:
-        st.title("🤖 Friday")
+        st.title("🤖 Yokino")
         st.caption("你的个人 AI 助理")
 
         st.divider()
@@ -87,8 +87,8 @@ def main():
             st.rerun()
 
     # Main chat area
-    st.title("Friday")
-    st.caption("就像钢铁侠的星期五，随时在线。")
+    st.title("Yokino")
+    st.caption("你的个人 AI 助理。")
 
     # Init chat history
     if "messages" not in st.session_state:

@@ -1,4 +1,4 @@
-"""Friday 配置管理"""
+"""Yokino 配置管理"""
 
 from pathlib import Path
 from typing import Optional
@@ -61,7 +61,7 @@ def load_config(path: str = "config.yaml") -> Config:
 
     config_path = Path(path)
     if not config_path.exists() and not config_path.is_absolute():
-        # 如果 CWD 下找不到，尝试在 friday 包目录下查找
+        # 如果 CWD 下找不到，尝试在 yokino 包目录下查找
         fallback = Path(__file__).parent / path
         if fallback.exists():
             config_path = fallback

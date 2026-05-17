@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Friday CLI — 个人 AI 助理终端入口"""
+"""Yokino CLI — 个人 AI 助理终端入口"""
 
 import io
 import sys
@@ -56,8 +56,8 @@ def print_banner():
     """打印欢迎信息"""
     banner = """
 ╔══════════════════════════════════════════╗
-║            Friday — 你的 AI 助理         ║
-║        就像钢铁侠的星期五，随时在线         ║
+║            Yokino — 你的 AI 助理         ║
+║        你的个人 AI 助理，随时在线        ║
 ╚══════════════════════════════════════════╝
     """
     console.print(banner, style="bold cyan")
@@ -77,7 +77,7 @@ def print_banner():
     help="配置文件路径 (默认: config.yaml)",
 )
 def main(config: str):
-    """Friday - 个人 AI 生活学习工作助理"""
+    """Yokino - 个人 AI 生活学习工作助理"""
     # 加载配置
     cfg = load_config(config)
     console.print(f"[dim]配置文件: {config}[/dim]")
@@ -118,7 +118,7 @@ def main(config: str):
 
         # 流式输出回复
         console.print()
-        with console.status("[bold green]Friday 思考中...[/bold green]", spinner="dots"):
+        with console.status("[bold green]Yokino 思考中...[/bold green]", spinner="dots"):
             full_response = ""
             for chunk in agent.chat(user_input):
                 full_response += chunk
@@ -126,7 +126,7 @@ def main(config: str):
         # 用 Markdown 渲染回复
         if full_response:
             md = Markdown(full_response.strip())
-            console.print(Panel(md, border_style="green", title="[bold green]Friday[/bold green]"))
+            console.print(Panel(md, border_style="green", title="[bold green]Yokino[/bold green]"))
         console.print()
 
 

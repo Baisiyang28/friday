@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Friday Bot 服务入口 — 启动飞书 Bot"""
+"""Yokino Bot 服务入口 — 启动飞书 Bot"""
 
 import io
 import sys
@@ -66,7 +66,7 @@ def main():
     bot.start()
 
     # 初始化调度器（主动推送）
-    from scheduler.scheduler import FridayScheduler
+    from scheduler.scheduler import YokinoScheduler
 
     def push_notification(chat_id: str, text: str):
         if chat_id:
@@ -74,7 +74,7 @@ def main():
         else:
             bot.broadcast(text)
 
-    sched = FridayScheduler(send_callback=push_notification)
+    sched = YokinoScheduler(send_callback=push_notification)
     # 为已知聊天设置每日简报（启动后动态添加）
     import time
     time.sleep(3)  # 等 Bot 建立连接
@@ -82,7 +82,7 @@ def main():
         sched.schedule_daily_briefing(chat_id)
     sched.start()
 
-    print("🤖 Friday Bot 已启动，等待飞书消息...")
+    print("🤖 Yokino Bot 已启动，等待飞书消息...")
     print("  • 消息回复: ✅")
     print("  • 提醒检查: 每 30 秒")
     print("  • 每日简报: 每天 8:00")
